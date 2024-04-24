@@ -24,7 +24,7 @@ const app = express()
 //     // credentials: true,
 //   })
 // )
-app.use(express.static(path.resolve(__dirname, './public')))
+// app.use(express.static(path.resolve(__dirname, './public')))
 app.use(express.json())
 
 const corsConfig = {
@@ -41,9 +41,9 @@ app.use('/store', router)
 app.use(notFoundMiddleware)
 app.use(errorHandlerMiddleware)
 
-app.get('*', (req, res) => {
-  res.sendFile(path.resolve(__dirname, './build', 'index.html'))
-})
+// app.get('*', (req, res) => {
+//   res.sendFile(path.resolve(__dirname, './build', 'index.html'))
+// })
 
 const PORT = process.env.PORT || 5000
 
