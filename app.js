@@ -45,6 +45,8 @@ app.use(errorHandlerMiddleware)
 //   res.sendFile(path.resolve(__dirname, './build', 'index.html'))
 // })
 
+console.log('test')
+
 const PORT = process.env.PORT || 5000
 
 const start = async () => {
