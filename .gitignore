@@ -1,0 +1,6 @@
+.env
+node_modules
+manualPopulate
+# Local Netlify folder
+.netlify
+functions
