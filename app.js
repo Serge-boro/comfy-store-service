@@ -11,28 +11,28 @@ const errorHandlerMiddleware = require('./middleware/error-handler')
 
 const app = express()
 
-// const origin = 'https://glowing-truffle-f241b6.netlify.app'
-const origin = 'http://localhost:5173'
-// const origin = 'http://localhost:4002'
-app.use(
-  cors({
-    credentials: true,
-    origin: process.env.ORIGIN,
-    // origin,
-    // methods: ['GET', 'POST'],
-    // origin: true,
-    // credentials: true,
-  })
-)
+// // const origin = 'https://glowing-truffle-f241b6.netlify.app'
+// const origin = 'http://localhost:5173'
+// // const origin = 'http://localhost:4002'
+// app.use(
+//   cors({
+//     credentials: true,
+//     origin: process.env.ORIGIN,
+//     // origin,
+//     // methods: ['GET', 'POST'],
+//     // origin: true,
+//     // credentials: true,
+//   })
+// )
 app.use(express.static(path.resolve(__dirname, './public')))
 app.use(express.json())
 
-// const corsConfig = {
-//   origin: true,
-//   credentials: true,
-// }
-// app.use(cors(corsConfig))
-// app.options('*', cors(corsConfig))
+const corsConfig = {
+  origin: true,
+  credentials: true,
+}
+app.use(cors(corsConfig))
+app.options('*', cors(corsConfig))
 
 app.use(cookieParser())
 
