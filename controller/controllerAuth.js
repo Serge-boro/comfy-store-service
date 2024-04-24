@@ -66,12 +66,12 @@ const postLogin = async (req, res, next) => {
     const accessToken = jwt.sign(
       { username: userFound.user, userId },
       process.env.ACCESS_TOKEN_SECRET,
-      { expiresIn: '2000s' }
+      { expiresIn: '200s' }
     )
     const refreshToken = jwt.sign(
       { username: userFound.user, userId },
       process.env.REFRESH_TOKEN_SECRET,
-      { expiresIn: '2000s' }
+      { expiresIn: '200s' }
     )
 
     // console.log({ refreshToken })
