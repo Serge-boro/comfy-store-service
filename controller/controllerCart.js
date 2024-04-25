@@ -25,11 +25,7 @@ const addCartItem = async (req, res, next) => {
 
 const removeCartItem = async (req, res, next) => {
   const { cartID } = req.body
-  const cart = await SchemaCart.findOneAndDelete({ cartID })
-  console.log(cart)
-  // const cartItems = cart.filter((item) => item.cartID !== cartID)
-  // await cartItems.save()
-  // console.log(cartItems)
+  await SchemaCart.findOneAndDelete({ cartID })
   res.status(200).json('')
 }
 

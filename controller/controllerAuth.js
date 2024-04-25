@@ -51,7 +51,6 @@ const postLogin = async (req, res, next) => {
 
     userFound = await UserSchema.findOne({ user })
     const userId = JSON.parse(JSON.stringify(userFound._id))
-    console.log(userId)
     if (!userFound) {
       return res
         .status(401)
@@ -66,15 +65,13 @@ const postLogin = async (req, res, next) => {
     const accessToken = jwt.sign(
       { username: userFound.user, userId },
       process.env.ACCESS_TOKEN_SECRET,
-      { expiresIn: '200s' }
+      { expiresIn: '500s' }
     )
     const refreshToken = jwt.sign(
       { username: userFound.user, userId },
       process.env.REFRESH_TOKEN_SECRET,
-      { expiresIn: '200s' }
+      { expiresIn: '600s' }
     )
-
-    // console.log({ refreshToken })
 
     userFound.refreshToken = refreshToken
     await userFound.save()
@@ -83,7 +80,7 @@ const postLogin = async (req, res, next) => {
       httpOnly: true,
       sameSite: 'None',
       secure: true,
-      maxAge: 20 * 1000,
+      maxAge: 60 * 10 * 1000,
     })
 
     res.status(200).json({ userID: userId, user, accessToken })
@@ -95,7 +92,6 @@ const postLogin = async (req, res, next) => {
 const refreshTokenController = async (req, res, next) => {
   const cookies = req.cookies
 
-  // console.log(req)
   if (!cookies?.jwt) {
     return res.status(401).json({ message: 'Cookie is missing' })
   }
@@ -106,10 +102,7 @@ const refreshTokenController = async (req, res, next) => {
     return next(res.status(401).json({ message: 'Cookie is not match' }))
   }
 
-  // console.log(userFound.user)
-
   jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, (err, decoded) => {
-    console.log({ decoded })
     if (err || userFound.user !== decoded.username) {
       return res.status(401).json({ message: 'verify jwt failed' })
     }
@@ -117,7 +110,7 @@ const refreshTokenController = async (req, res, next) => {
     const accessToken = jwt.sign(
       { username: decoded.username, userId: decoded.userId },
       process.env.ACCESS_TOKEN_SECRET,
-      { expiresIn: '3600s' }
+      { expiresIn: '600s' }
     )
     res.json({ accessToken })
   })
@@ -125,7 +118,7 @@ const refreshTokenController = async (req, res, next) => {
 
 const logout = async (req, res, next) => {
   const cookies = req.cookies
-  // console.log({ cookies })
+
   if (!cookies?.jwt) {
     return res.status(201).json({ message: 'Cookie already removed' })
   }

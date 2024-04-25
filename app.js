@@ -11,20 +11,7 @@ const errorHandlerMiddleware = require('./middleware/error-handler')
 
 const app = express()
 
-// // const origin = 'https://glowing-truffle-f241b6.netlify.app'
-// const origin = 'http://localhost:5173'
-// // const origin = 'http://localhost:4002'
-// app.use(
-//   cors({
-//     credentials: true,
-//     origin: process.env.ORIGIN,
-//     // origin,
-//     // methods: ['GET', 'POST'],
-//     // origin: true,
-//     // credentials: true,
-//   })
-// )
-// app.use(express.static(path.resolve(__dirname, './public')))
+app.use(express.static(path.resolve(__dirname, './public')))
 app.use(express.json())
 
 const corsConfig = {
@@ -41,11 +28,9 @@ app.use('/store', router)
 app.use(notFoundMiddleware)
 app.use(errorHandlerMiddleware)
 
-// app.get('*', (req, res) => {
-//   res.sendFile(path.resolve(__dirname, './build', 'index.html'))
-// })
-
-console.log('test')
+app.get('*', (req, res) => {
+  res.sendFile(path.resolve(__dirname, './build', 'index.html'))
+})
 
 const PORT = process.env.PORT || 5000
 
