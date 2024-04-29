@@ -65,12 +65,12 @@ const postLogin = async (req, res, next) => {
     const accessToken = jwt.sign(
       { username: userFound.user, userId },
       process.env.ACCESS_TOKEN_SECRET,
-      { expiresIn: '500s' }
+      { expiresIn: '60s' }
     )
     const refreshToken = jwt.sign(
       { username: userFound.user, userId },
       process.env.REFRESH_TOKEN_SECRET,
-      { expiresIn: '600s' }
+      { expiresIn: '90s' }
     )
 
     userFound.refreshToken = refreshToken
@@ -80,7 +80,7 @@ const postLogin = async (req, res, next) => {
       httpOnly: true,
       sameSite: 'None',
       secure: true,
-      maxAge: 60 * 10 * 1000,
+      maxAge: 90 * 1000,
     })
 
     res.status(200).json({ userID: userId, user, accessToken })
@@ -91,13 +91,23 @@ const postLogin = async (req, res, next) => {
 
 const refreshTokenController = async (req, res, next) => {
   const cookies = req.cookies
+  console.log({ cookies })
 
   if (!cookies?.jwt) {
     return res.status(401).json({ message: 'Cookie is missing' })
   }
   const refreshToken = cookies.jwt
+  console.log({ refreshToken })
 
-  const matchToken = userFound.refreshToken === refreshToken
+  // if (!refreshToken) {
+  //   return res.status(401).json({ message: 'Cookie is not match' })
+  // }
+  const userFoundToken = await UserSchema.findOne({ user })
+  console.log({ userFoundToken })
+
+  console.log({ refUserToken: userFoundToken.refreshToken })
+
+  const matchToken = userFoundToken.refreshToken === refreshToken
   if (!matchToken) {
     return next(res.status(401).json({ message: 'Cookie is not match' }))
   }
@@ -110,7 +120,7 @@ const refreshTokenController = async (req, res, next) => {
     const accessToken = jwt.sign(
       { username: decoded.username, userId: decoded.userId },
       process.env.ACCESS_TOKEN_SECRET,
-      { expiresIn: '600s' }
+      { expiresIn: '90s' }
     )
     res.json({ accessToken })
   })
